@@ -1,0 +1,24 @@
+{
+  "name": "metaplex-algo-memecoin-agent-poc",
+  "version": "1.0.0",
+  "description": "OpenClaw-style AI agent that mints memecoins on Solana devnet via Metaplex",
+  "type": "module",
+  "scripts": {
+    "dev": "node scripts/dev.js",
+    "setup": "node scripts/setup-wallet.js",
+    "mint": "node scripts/mint-token.js",
+    "mint-all": "node scripts/mint-all.js"
+  },
+  "dependencies": {
+    "@metaplex-foundation/mpl-token-metadata": "^3.3.0",
+    "@metaplex-foundation/umi": "^1.5.1",
+    "@metaplex-foundation/umi-bundle-defaults": "^1.0.0",
+    "@metaplex-foundation/umi-uploader-irys": "^1.5.0",
+    "@solana/web3.js": "^1.98.0",
+    "bs58": "^6.0.0",
+    "dotenv": "^16.4.5"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}

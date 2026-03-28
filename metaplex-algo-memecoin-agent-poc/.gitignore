@@ -1,0 +1,17 @@
+# Dependencies
+node_modules/
+
+# Environment variables (contains your private key — never commit this!)
+.env
+
+# Generated results (optional — you may want to commit this to show your PoC)
+# data/results.json
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp

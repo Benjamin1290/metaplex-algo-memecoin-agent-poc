@@ -1,0 +1,44 @@
+[
+  {
+    "index": 0,
+    "name": "MoonSloth",
+    "symbol": "SLOTH",
+    "mintAddress": "3Que5JFEUaqTMJUHCMDQsAKAjWnRLHdfeqZBxRBbBNo6",
+    "metadataUri": "https://gateway.irys.xyz/31vz89ei1GSAQCKmnsMVrnZpPwsfK4n45DwzCNZtPSgj",
+    "explorerUrl": "https://explorer.solana.com/address/3Que5JFEUaqTMJUHCMDQsAKAjWnRLHdfeqZBxRBbBNo6?cluster=devnet",
+    "createTxSignature": "/JJb2WQK73gl/y95ITorYYZmg/BdelKeXimVqvkO0RLx9Obe0UdNXZXgNraWhQ3WLZbaUYwWI2vbk9M9L37IBw==",
+    "mintTxSignature": "62L1KCBnAHCdutaNicx9nbhR5G8fm1nGQnafRjHjsrqTAPrTB1TgmFtenGTB4Sf9y3fQ3ZEEpUjKU1pTRBp4YEKz",
+    "initialSupply": 1000000,
+    "decimals": 6,
+    "network": "devnet",
+    "mintedAt": "2026-03-28T19:56:48.681Z"
+  },
+  {
+    "index": 1,
+    "name": "GigaBrain",
+    "symbol": "GBRAIN",
+    "mintAddress": "EViDFFVn13WpUfAsyWah7ze77FCeoRyLU7BZM1uFPDdP",
+    "metadataUri": "https://gateway.irys.xyz/2XHJFmQE5jBVKpfQTsMLDvWXEXFovdpU1a2RMQT6MxLN",
+    "explorerUrl": "https://explorer.solana.com/address/EViDFFVn13WpUfAsyWah7ze77FCeoRyLU7BZM1uFPDdP?cluster=devnet",
+    "createTxSignature": "kLK+187WhsJqVHIhoFg3RF5AdTkvrAo7lyv3r/PYfsx/5mRlwVbMNu+P9e3yN9lAIM49dWK0kikPgTcuJmHNDg==",
+    "mintTxSignature": "nx2GQhFYBt8F4NTamCCveyPy3Bfoht61CqkFgVsq4BUWKhGzHfmFAkYTAjgYkD3hRRFbnrFdyXxo6YmKQi5gr2k",
+    "initialSupply": 1000000,
+    "decimals": 6,
+    "network": "devnet",
+    "mintedAt": "2026-03-28T19:57:07.729Z"
+  },
+  {
+    "index": 2,
+    "name": "PumpGhost",
+    "symbol": "GHOST",
+    "mintAddress": "3YbA6yGrBg9dAtxrpZPvwBhFQvxjYzP84vjX8acyvCtT",
+    "metadataUri": "https://gateway.irys.xyz/oCpBDwajYmcCjzfYS6z9Kmm1RbTLdWvrJLfX3FfvVn8",
+    "explorerUrl": "https://explorer.solana.com/address/3YbA6yGrBg9dAtxrpZPvwBhFQvxjYzP84vjX8acyvCtT?cluster=devnet",
+    "createTxSignature": "BzNPBkCChP7g0XyaUHXyXVVjhYBJhWM1gcGtwlwOIC3qe3nGhl3TBzN6SMqQLjUPApYkZ0NSjhfSvzMekgvsDA==",
+    "mintTxSignature": "2PEayWrwZP1VwY7uy1rGPnPv2LM7NVTRmWR5WX7DXgRd5tXRHhEhvAmxJBsqcpz2emHgXdQWF7VxZ1VcJDsqs7MS",
+    "initialSupply": 1000000,
+    "decimals": 6,
+    "network": "devnet",
+    "mintedAt": "2026-03-28T19:57:53.870Z"
+  }
+]
