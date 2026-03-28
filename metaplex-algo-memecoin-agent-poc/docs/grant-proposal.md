@@ -323,7 +323,7 @@ Result: 3/3 tokens minted successfully on devnet
 - Published npm package: `openclaw-create-memecoin`
 - Tutorial video + written walkthrough
 
-**All code will be MIT licensed and published at:** `https://github.com/Benjamin1290/openclaw-create-memecoin`
+**All code will be MIT licensed and published at:** `https://github.com/Benjamin1290/metaplex-algo-memecoin-agent-poc`
 
 ---
 
