@@ -1,7 +1,7 @@
 /**
  * dev.js
  *
- * one command runner for ease of use: sets up wallet if needed, then mints all tokens.
+ * One-command runner: sets up wallet if needed, then mints all tokens.
  *
  * Usage: npm run dev
  */
@@ -11,10 +11,10 @@ import { existsSync, readFileSync } from 'fs';
 
 console.log('\n' + '═'.repeat(60));
 console.log('  OPENCLAW ALGO MEMECOIN AGENT — FULL RUN');
+console.log('  Orchestrates wallet setup and batch minting in one command.');
 console.log('═'.repeat(60));
 
-// STEP 1: Check if we already have a funded wallet
-// If .env exists and has SOLANA_PRIVATE_KEY, skip setup
+// Check if we already have a funded wallet
 let needsSetup = true;
 
 if (existsSync('.env')) {
@@ -27,7 +27,7 @@ if (existsSync('.env')) {
 if (needsSetup) {
   console.log('\n[1/2] No wallet found — running setup...\n');
   try {
-    execSync('node scripts/setup-wallet.js', { stdio: 'inherit' });
+    execSync('node src/wallet/setup-wallet.js', { stdio: 'inherit' });
   } catch {
     console.error('\nWallet setup failed. See error above.');
     process.exit(1);
@@ -36,10 +36,9 @@ if (needsSetup) {
   console.log('\n[1/2] Wallet already exists in .env — skipping setup');
 }
 
-// STEP 2: Mint all tokens
 console.log('\n[2/2] Minting all tokens...\n');
 try {
-  execSync('node scripts/mint-all.js', { stdio: 'inherit' });
+  execSync('node src/agent/mint-all.js', { stdio: 'inherit' });
 } catch {
   console.error('\nMinting failed. See error above.');
   process.exit(1);

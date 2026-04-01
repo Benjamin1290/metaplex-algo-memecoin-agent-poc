@@ -1,9 +1,10 @@
 /**
  * mint-all.js
  *
- * Runs mint-token.js for every token in data/tokens.json sequentially and prints a final summary table.
+ * Runs mint-token.js for every token in data/tokens.json sequentially,
+ * then prints a final summary table.
  *
- * Usage: node scripts/mint-all.js
+ * Usage: node src/agent/mint-all.js
  */
 
 import { readFileSync, existsSync } from 'fs';
@@ -13,12 +14,10 @@ const tokens = JSON.parse(readFileSync('./data/tokens.json', 'utf-8'));
 
 console.log('\n' + '═'.repeat(60));
 console.log('OPENCLAW ALGO AGENT — MINTING ALL TOKENS');
+console.log('Mints each token sequentially so transactions don\'t race.');
 console.log('═'.repeat(60));
 console.log(`Found ${tokens.length} tokens to mint:`);
 tokens.forEach((t, i) => console.log(`  [${i}] ${t.name} (${t.symbol})`));
-
-// Mint each token one at a time
-// (important to be sequential: each tx needs to confirm before next)
 
 const failed = [];
 
@@ -28,21 +27,16 @@ for (let i = 0; i < tokens.length; i++) {
   console.log('─'.repeat(60));
 
   try {
-    // Run mint-token.js as a child process, inheriting stdio so that all console.log output is visible directly in this terminal
-    execSync(`node scripts/mint-token.js ${i}`, { stdio: 'inherit' });
+    execSync(`node src/mint/mint-token.js ${i}`, { stdio: 'inherit' });
   } catch (err) {
-    console.error(`\n❌ Failed to mint ${tokens[i].name}. Error logged above.`);
+    console.error(`\nFailed to mint ${tokens[i].name}. Error logged above.`);
     failed.push({ index: i, name: tokens[i].name });
   }
 }
 
-// Summary
-
 console.log('\n' + '═'.repeat(60));
 console.log('MINT-ALL SUMMARY');
 console.log('═'.repeat(60));
-
-// Load results from file
 
 let results = [];
 if (existsSync('./data/results.json')) {
@@ -63,7 +57,7 @@ if (results.length > 0) {
 if (failed.length > 0) {
   console.log(`\nFailed tokens (${failed.length}):`);
   failed.forEach((f) => console.log(`  [${f.index}] ${f.name}`));
-  console.log('\n   Tip: Run individual tokens with: node scripts/mint-token.js <index>');
+  console.log('\n   Tip: Run individual tokens with: node src/mint/mint-token.js <index>');
 }
 
 const successCount = tokens.length - failed.length;

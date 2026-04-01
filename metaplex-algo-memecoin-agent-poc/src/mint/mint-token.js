@@ -1,20 +1,20 @@
 /**
  * mint-token.js
  *
- * Mints a single memecoin from data/tokens.json using Metaplex UMI
+ * Mints a single memecoin from data/tokens.json using Metaplex UMI.
  *
  * What it does:
  * 1. Loads token metadata from data/tokens.json
  * 2. Connects to Solana devnet
- * 3. Uploads the token metadata JSON to Arweave via Irys devnet
+ * 3. Uploads the token image + metadata JSON to Arweave via Irys devnet
  * 4. Creates the on-chain token mint + Metaplex metadata account
  * 5. Mints 1,000,000 tokens to your wallet
  * 6. Saves the mint address + explorer link to data/results.json
  *
  * Usage:
- *   node scripts/mint-token.js 0 => mint MoonSloth (index 0)
- *   node scripts/mint-token.js 1 => mint GigaBrain (index 1)
- *   node scripts/mint-token.js 2 => mint PumpGhost (index 2)
+ *   node src/mint/mint-token.js 0  =>  mint MoonSloth
+ *   node src/mint/mint-token.js 1  =>  mint GigaBrain
+ *   node src/mint/mint-token.js 2  =>  mint PumpGhost
  */
 
 import 'dotenv/config';
@@ -40,15 +40,15 @@ import { readFileSync, writeFileSync, existsSync } from 'fs';
 // CONSTANTS — DEVNET ONLY
 const DEVNET_RPC = 'https://api.devnet.solana.com';
 const IRYS_DEVNET_NODE = 'https://devnet.irys.xyz';
-const INITIAL_SUPPLY = 1_000_000; // 1 million tokens
-const TOKEN_DECIMALS = 6;          // like USDC — 6 decimal places
-const IRYS_FUND_SOL = 0.02; // SOL to pre-fund Irys (covers image + metadata uploads)
+const INITIAL_SUPPLY = 1_000_000;
+const TOKEN_DECIMALS = 6;
+const IRYS_FUND_SOL = 0.02;
 
-// STEP 0: Parse CLI args and load token data
+// Parse CLI args and load token data
 const tokenIndex = parseInt(process.argv[2] ?? '0', 10);
 
 if (isNaN(tokenIndex)) {
-  console.error('Usage: node scripts/mint-token.js <index>  (e.g. 0, 1, or 2)');
+  console.error('Usage: node src/mint/mint-token.js <index>  (e.g. 0, 1, or 2)');
   process.exit(1);
 }
 
@@ -63,42 +63,37 @@ const token = tokens[tokenIndex];
 
 console.log('\n' + '═'.repeat(60));
 console.log(`MINTING TOKEN [${tokenIndex}]: ${token.name} (${token.symbol})`);
+console.log('Uploads image + metadata to Arweave, creates SPL mint, attaches Metaplex metadata on-chain.');
 console.log('═'.repeat(60));
 console.log(`   Description : ${token.description.slice(0, 60)}...`);
-console.log(`   Image URL   : ${token.imageUrl}`);
+console.log(`   Image       : ${token.localImagePath}`);
 
-// STEP 1: Validate .env and load private key
+// Validate .env and load private key
 if (!process.env.SOLANA_PRIVATE_KEY) {
   console.error('\nSOLANA_PRIVATE_KEY not found in .env!');
-  console.error('   Run this first: node scripts/setup-wallet.js');
+  console.error('   Run this first: node src/wallet/setup-wallet.js');
   process.exit(1);
 }
 
-// Decode the base58 private key back into raw bytes
 const privateKeyBytes = bs58.decode(process.env.SOLANA_PRIVATE_KEY);
 
-// STEP 2: Set up Metaplex UMI
+// Set up Metaplex UMI
 console.log('\nSetting up Metaplex UMI on devnet...');
 
 const umi = createUmi(DEVNET_RPC)
-  .use(mplTokenMetadata())       // loads the Token Metadata program
+  .use(mplTokenMetadata())
   .use(irysUploader({ address: IRYS_DEVNET_NODE }));
 
-// Create a UMI keypair from our raw private key bytes (UMI has its own keypair format separate from @solana/web3.js)
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(privateKeyBytes);
 const signer = createSignerFromKeypair(umi, umiKeypair);
-
-// Tell UMI to use this keypair for signing all transactions
 umi.use(signerIdentity(signer));
 
 console.log(`Wallet loaded: ${signer.publicKey}`);
 console.log(`   Explorer: https://explorer.solana.com/address/${signer.publicKey}?cluster=devnet`);
 
-// STEP 3: Fund the Irys uploader
-//
-// Irys stores metadata on Arweave (permanent decentralised storage)
-// On devnet, you pay with devnet SOL (worthless test tokens)
-// We pre-fund a small amount to cover the metadata JSON upload
+// Fund the Irys uploader
+// Irys stores metadata on Arweave (permanent decentralised storage).
+// On devnet we pay with devnet SOL (worthless test tokens).
 console.log(`\nFunding Irys uploader with ${IRYS_FUND_SOL} SOL (devnet)...`);
 
 try {
@@ -106,16 +101,14 @@ try {
   console.log('Irys funded');
 } catch (err) {
   console.error('Could not fund Irys uploader:', err.message);
-  console.error('   Make sure your wallet has SOL. Run: node scripts/setup-wallet.js');
+  console.error('   Make sure your wallet has SOL. Run: node src/wallet/setup-wallet.js');
   process.exit(1);
 }
 
-// STEP 4a: Read local image file and upload it to Arweave
-//
-// Images live in assets/ (token-0.jpg, token-1.jpg, token-2.jpg).
-// Uploading to Arweave gives a permanent URL that wallets and
-// Solana Explorer can always fetch without hotlink restrictions.
-console.log(`\nUploading image to Arweave...`);
+// Upload image to Arweave
+// Uploading to Arweave gives a permanent URL that wallets and explorers
+// can always fetch — no hotlink restrictions, no CDN going down.
+console.log('\nUploading image to Arweave...');
 
 if (!token.localImagePath) {
   console.error('No localImagePath in tokens.json. Add "localImagePath": "assets/token-X.jpg"');
@@ -123,7 +116,7 @@ if (!token.localImagePath) {
 }
 if (!existsSync(token.localImagePath)) {
   console.error(`Image file not found: ${token.localImagePath}`);
-  console.error(`Download your image from imgbb and save it to: ${token.localImagePath}`);
+  console.error(`Save your image to: ${token.localImagePath}`);
   process.exit(1);
 }
 
@@ -140,14 +133,14 @@ try {
   process.exit(1);
 }
 
-// STEP 4b: Upload token metadata JSON to Arweave
-console.log(`\nUploading metadata JSON to Arweave...`);
+// Upload metadata JSON to Arweave
+console.log('\nUploading metadata JSON to Arweave...');
 
 const metadataJson = {
   name: token.name,
   symbol: token.symbol,
   description: token.description,
-  image: imageArweaveUri,   // ← permanent Arweave URL, not imgbb
+  image: imageArweaveUri,
   attributes: [
     { trait_type: 'Type', value: 'Memecoin' },
     { trait_type: 'Network', value: 'Solana Devnet' },
@@ -171,83 +164,72 @@ try {
   process.exit(1);
 }
 
-// STEP 5: Create the token mint and Metaplex metadata account
-//
+// Create the token mint and Metaplex metadata account
 // createFungible() does two things in one tx:
-//   a) Creates a new SPL token mint account (the token's "ID")
-//   b) Creates a Metaplex metadata account pointing to the URI
-console.log(`\nCreating on-chain token mint + metadata`);
+//   a) Creates a new SPL token mint account (the token's on-chain ID)
+//   b) Creates a Metaplex metadata account pointing to the Arweave URI
+console.log('\nCreating on-chain token mint + metadata...');
 
-// generateSigner creates a fresh keypair that will be the mint address
 const mint = generateSigner(umi);
-console.log(`   Mint address (token ID): ${mint.publicKey}`);
+console.log(`   Mint address: ${mint.publicKey}`);
 
 let createTxSignature;
 try {
   const { signature } = await createFungible(umi, {
-    mint,                                    // the new mint account
+    mint,
     name: token.name,
     symbol: token.symbol,
-    uri: metadataUri,                        // the Arweave URL we just uploaded
-    sellerFeeBasisPoints: percentAmount(0),  // 0% royalty fee
+    uri: metadataUri,
+    sellerFeeBasisPoints: percentAmount(0),
     decimals: TOKEN_DECIMALS,
-    isMutable: true,                         // allows metadata updates (disable post-launch in prod)
+    isMutable: true,
   }).sendAndConfirm(umi);
 
   createTxSignature = Buffer.from(signature).toString('base64');
-  console.log(`Token created`);
+  console.log('Token created');
   console.log(`   Tx: https://explorer.solana.com/tx/${createTxSignature}?cluster=devnet`);
 } catch (err) {
   console.error('Token creation failed:', err.message);
   process.exit(1);
 }
 
-// STEP 6: Mint the initial supply to the wallet
-//
-// mintV1() mints tokens from the mint account to our wallet
-// Total minted = INITIAL_SUPPLY * 10^TOKEN_DECIMALS (raw amount)
+// Mint initial supply to wallet
+// Uses @solana/spl-token directly — it correctly handles ATA creation
+// regardless of which SPL token program version is in use.
 console.log(`\nMinting ${INITIAL_SUPPLY.toLocaleString()} ${token.symbol} to your wallet...`);
 
-// Raw amount = human-readable amount × 10^decimals
-// e.g. 1,000,000 tokens with 6 decimals = 1,000,000,000,000 raw
 const rawSupply = INITIAL_SUPPLY * Math.pow(10, TOKEN_DECIMALS);
 
-// Use @solana/spl-token directly — it correctly handles ATA creation
-// and minting regardless of which SPL token program version is in use.
 let mintTxSignature;
 try {
   const connection = new Connection(DEVNET_RPC, 'confirmed');
-  // Reconstruct a web3.js Keypair from our raw private key bytes
   const web3Keypair = Keypair.fromSecretKey(privateKeyBytes);
   const mintPublicKey = new PublicKey(mint.publicKey.toString());
 
-  // Create the Associated Token Account (ATA) if it doesn't exist.
-  // This is the wallet's "slot" for holding this specific token.
   const tokenAccount = await getOrCreateAssociatedTokenAccount(
     connection,
-    web3Keypair,           // payer
-    mintPublicKey,         // which token
-    web3Keypair.publicKey  // owner
+    web3Keypair,
+    mintPublicKey,
+    web3Keypair.publicKey
   );
 
-  // Mint the initial supply into that ATA
   mintTxSignature = await mintTo(
     connection,
-    web3Keypair,           // payer
-    mintPublicKey,         // which token
-    tokenAccount.address,  // destination ATA
-    web3Keypair,           // mint authority
+    web3Keypair,
+    mintPublicKey,
+    tokenAccount.address,
+    web3Keypair,
     rawSupply
   );
 
-  console.log(`Minted`);
+  console.log('Minted');
   console.log(`   Tx: https://explorer.solana.com/tx/${mintTxSignature}?cluster=devnet`);
 } catch (err) {
   console.error('Minting failed:', err.message);
   process.exit(1);
 }
 
-// STEP 7: Save results to data/results.json
+// Save results
 const mintAddress = mint.publicKey.toString();
 const explorerUrl = `https://explorer.solana.com/address/${mintAddress}?cluster=devnet`;
 
@@ -266,11 +248,10 @@ const result = {
   mintedAt: new Date().toISOString(),
 };
 
-// Merge with any existing results
 let results = [];
 if (existsSync('./data/results.json')) {
   results = JSON.parse(readFileSync('./data/results.json', 'utf-8'));
-  results = results.filter((r) => r.index !== tokenIndex); // remove old entry for this index
+  results = results.filter((r) => r.index !== tokenIndex);
 }
 results.push(result);
 writeFileSync('./data/results.json', JSON.stringify(results, null, 2));

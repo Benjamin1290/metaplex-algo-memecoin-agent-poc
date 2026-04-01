@@ -101,6 +101,7 @@ The attached codebase (`metaplex-algo-memecoin-agent-poc`) demonstrates Stages 3
 ```
 ════════════════════════════════════════════════════════════
   OPENCLAW ALGO MEMECOIN AGENT — FULL RUN
+  Orchestrates wallet setup and batch minting in one command.
 ════════════════════════════════════════════════════════════
 
 [1/2] Wallet already exists in .env — skipping setup
@@ -109,6 +110,7 @@ The attached codebase (`metaplex-algo-memecoin-agent-poc`) demonstrates Stages 3
 
 ════════════════════════════════════════════════════════════
 OPENCLAW ALGO AGENT — MINTING ALL TOKENS
+Mints each token sequentially so transactions don't race.
 ════════════════════════════════════════════════════════════
 Found 3 tokens to mint:
   [0] MoonSloth (SLOTH)
@@ -121,9 +123,10 @@ Starting token 1 of 3: MoonSloth
 
 ════════════════════════════════════════════════════════════
 MINTING TOKEN [0]: MoonSloth (SLOTH)
+Uploads image + metadata to Arweave, creates SPL mint, attaches Metaplex metadata on-chain.
 ════════════════════════════════════════════════════════════
    Description : The laziest memecoin on Solana. While degens FOMO and panic-...
-   Image URL   : undefined
+   Image       : assets/token-0.jpg
 
 Setting up Metaplex UMI on devnet...
 Wallet loaded: 9VHbW4czZJzXuePFnwh4EaGoxTG4YKJdWAtNj1AFTvNF
@@ -163,9 +166,10 @@ Starting token 2 of 3: GigaBrain
 
 ════════════════════════════════════════════════════════════
 MINTING TOKEN [1]: GigaBrain (GBRAIN)
+Uploads image + metadata to Arweave, creates SPL mint, attaches Metaplex metadata on-chain.
 ════════════════════════════════════════════════════════════
    Description : Born from the collective intelligence of 10,000 crypto Twitt...
-   Image URL   : undefined
+   Image       : assets/token-1.jpg
 
 Setting up Metaplex UMI on devnet...
 Wallet loaded: 9VHbW4czZJzXuePFnwh4EaGoxTG4YKJdWAtNj1AFTvNF
@@ -205,9 +209,10 @@ Starting token 3 of 3: PumpGhost
 
 ════════════════════════════════════════════════════════════
 MINTING TOKEN [2]: PumpGhost (GHOST)
+Uploads image + metadata to Arweave, creates SPL mint, attaches Metaplex metadata on-chain.
 ════════════════════════════════════════════════════════════
    Description : Haunting Solana's mempool since the last bull run. PumpGhost...
-   Image URL   : undefined
+   Image       : assets/token-2.jpg
 
 Setting up Metaplex UMI on devnet...
 Wallet loaded: 9VHbW4czZJzXuePFnwh4EaGoxTG4YKJdWAtNj1AFTvNF
