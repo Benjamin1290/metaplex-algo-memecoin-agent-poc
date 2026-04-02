@@ -1,0 +1,44 @@
+[
+  {
+    "index": 0,
+    "name": "MoonSloth",
+    "symbol": "SLOTH",
+    "mintAddress": "Cns5QxQTDj4DqS61K9DteuGWj55MWoTjDcvZjGXwmqa9",
+    "metadataUri": "https://gateway.irys.xyz/E75Rad52PxE83TqdR9wKQeRnLBeZxvjukuaKbWHEsMYt",
+    "explorerUrl": "https://explorer.solana.com/address/Cns5QxQTDj4DqS61K9DteuGWj55MWoTjDcvZjGXwmqa9?cluster=devnet",
+    "createTxSignature": "xB7d1x81ddN5uDmqgn/jVWjOEBZCqc0I9VniDOuhJrAZIYo+t/ZQ/+86q6LJb+xzDlI0CZxnrOu7Ju+UX5mnBA==",
+    "mintTxSignature": "4e6Q7cQJJH1HzgZj5kJX6HjCy9wezimDwBAFaUTVnTPdXBHw4ZfC5QADhvZasn5epMrcmbnzF9Yiw4ZmWqTaLeA8",
+    "initialSupply": 1000000,
+    "decimals": 6,
+    "network": "devnet",
+    "mintedAt": "2026-04-01T17:20:09.866Z"
+  },
+  {
+    "index": 1,
+    "name": "GigaBrain",
+    "symbol": "GBRAIN",
+    "mintAddress": "9z1f9XnCNPpWi4KQWB8rjaDH7tnUGUa5qqpwLeBABww3",
+    "metadataUri": "https://gateway.irys.xyz/ETZ5DRRwgxyUsmRsvxVT9GT1coBzp6voG1x1w7CUNH68",
+    "explorerUrl": "https://explorer.solana.com/address/9z1f9XnCNPpWi4KQWB8rjaDH7tnUGUa5qqpwLeBABww3?cluster=devnet",
+    "createTxSignature": "gfcy6fIRaRuZAYVRFWfjF95HOjkjOAiIaEvf7XdaBv5HNs260q1cOvrw7ptYB1sr2vSUbac7SP1qpagUS0jjDg==",
+    "mintTxSignature": "5J94VUGwVv52V2Z5VcrSpeJ4caCc87ggAoMFmXZwp5Y42pAYHrXXmAqSqsT47QdqfxkWGkocJcb4MPzAqGrRECGm",
+    "initialSupply": 1000000,
+    "decimals": 6,
+    "network": "devnet",
+    "mintedAt": "2026-04-01T17:20:53.900Z"
+  },
+  {
+    "index": 2,
+    "name": "PumpGhost",
+    "symbol": "GHOST",
+    "mintAddress": "Aa2u34gxSQj1WqAPdeGB3qs4EzbkzU8KSCSZUsXg1N6Y",
+    "metadataUri": "https://gateway.irys.xyz/6U784Ysj2ahPT9TssNSxqXD4Tcipgpr8WyMybavbrHbR",
+    "explorerUrl": "https://explorer.solana.com/address/Aa2u34gxSQj1WqAPdeGB3qs4EzbkzU8KSCSZUsXg1N6Y?cluster=devnet",
+    "createTxSignature": "/GBeg8vgxhWpxl64+Mjd2kL9z29q9REqvEjnS1ZsVUuZkY46JMKHdMmytaCzzB1BdBEwGn4ZngF5qzllmIJEAQ==",
+    "mintTxSignature": "2aEYLcRDAQsG3Jsq9TJEKzpmXyBjnxMf23Dox2cYqjGPXdtwMKvrpxnTkNqdx43BSi31rXVW4RLVFL21G9cEni1C",
+    "initialSupply": 1000000,
+    "decimals": 6,
+    "network": "devnet",
+    "mintedAt": "2026-04-01T17:21:38.286Z"
+  }
+]
