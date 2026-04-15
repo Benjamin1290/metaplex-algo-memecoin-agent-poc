@@ -17,14 +17,14 @@ An AI-driven OpenClaw skill that scans live crypto trends (X, TikTok), generates
 
 ## Milestones & Budget
 
-| Milestone | Description | Deliverables | Proposed Amount (USD equiv. in SOL) |
-|---|---|---|---|
-| 1 | Coin recommendation engine + manual Genesis launches | • Working trend scanner (X + TikTok)<br>• AI concept generation with reasoning<br>• 10+ tokens manually launched on metaplex.com via Genesis<br>• Basic tracking of visibility/engagement | $5,000 |
-| 2 | Full autonomous agent + Agent Kit integration | • Agent registered on-chain via Agent Kit<br>• Automated end-to-end creation (trend → Genesis launch)<br>• Forkable reference for agent library | $5,000 |
-| 3 | Maintenance & Quality Metrics (3 months) | • Update skill based on feedback<br>• Monthly quality report (launch success rate, app visibility metrics, community forks)<br>• Public documentation + video tutorial | $2,000 |
+| Milestone | Type | Description | Deliverables & Performance Metrics | Proposed Amount (USD equiv. in SOL) |
+|---|---|---|---|---|
+| 1 | Base + Performance | Coin recommendation engine + manual Genesis launches | • Trend scanner (X + TikTok)<br>• AI concept generation with reasoning<br>• 10+ tokens manually launched on metaplex.com via Genesis<br>• **Performance:** At least 5 tokens visible in the app + tracking sheet | $5,000 |
+| 2 | Base + Performance | Full autonomous agent + Agent Kit integration | • Agent registered on-chain<br>• Automated end-to-end flow (trend → Genesis launch)<br>• Forkable reference for agent library<br>• **Performance:** Minimum 10 successful automated launches | $5,000 |
+| 3 | Handover & Light Maintenance | One-time handover + basic maintenance | • Final documentation + video tutorial<br>• Public repo fully cleaned and ready for community forks<br>• 1 month of light updates / bug fixes only if critical issues arise<br>• **Performance:** At least 3 community forks or positive feedback | $2,000 |
 
 **Total Grant: $12,000 USD equivalent in SOL**
-**Payment structure:** Milestone-based upon review and approval of deliverables.
+**Payment structure:** Milestone-based upon review and approval of deliverables. Base deliverables unlock payment; performance metrics are verified before release.
 
 ---
 
