@@ -5,11 +5,12 @@
  *
  * What it does:
  * 1. Loads token metadata from data/tokens.json
- * 2. Connects to Solana devnet
- * 3. Uploads the token image + metadata JSON to Arweave via Irys devnet
- * 4. Creates the on-chain token mint + Metaplex metadata account
- * 5. Mints 1,000,000 tokens to your wallet
- * 6. Saves the mint address + explorer link to data/results.json
+ * 2. Generates token artwork via DALL-E (OPENAI_API_KEY in .env)
+ * 3. Connects to Solana devnet
+ * 4. Uploads the token image + metadata JSON to Arweave via Irys devnet
+ * 5. Creates the on-chain token mint + Metaplex metadata account
+ * 6. Mints 1,000,000 tokens to your wallet
+ * 7. Saves the mint address + explorer link to data/results.json
  *
  * Usage:
  *   node src/mint/mint-token.js 0  =>  mint MoonSloth
@@ -18,6 +19,7 @@
  */
 
 import 'dotenv/config';
+import OpenAI from 'openai';
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
 import {
   createFungible,
@@ -35,7 +37,7 @@ import {
 import { getOrCreateAssociatedTokenAccount, mintTo } from '@solana/spl-token';
 import { Connection, Keypair, PublicKey } from '@solana/web3.js';
 import bs58 from 'bs58';
-import { readFileSync, writeFileSync, existsSync } from 'fs';
+import { writeFileSync, existsSync, readFileSync } from 'fs';
 
 // CONSTANTS — DEVNET ONLY
 const DEVNET_RPC = 'https://api.devnet.solana.com';
@@ -66,7 +68,6 @@ console.log(`MINTING TOKEN [${tokenIndex}]: ${token.name} (${token.symbol})`);
 console.log('Uploads image + metadata to Arweave, creates SPL mint, attaches Metaplex metadata on-chain.');
 console.log('═'.repeat(60));
 console.log(`   Description : ${token.description.slice(0, 60)}...`);
-console.log(`   Image       : ${token.localImagePath}`);
 
 // Validate .env and load private key
 if (!process.env.SOLANA_PRIVATE_KEY) {
@@ -105,31 +106,38 @@ try {
   process.exit(1);
 }
 
-// Upload image to Arweave
-// Uploading to Arweave gives a permanent URL that wallets and explorers
-// can always fetch — no hotlink restrictions, no CDN going down.
-console.log('\nUploading image to Arweave...');
+// Generate image with DALL-E and upload to Arweave
+console.log('\nGenerating image with DALL-E...');
 
-if (!token.localImagePath) {
-  console.error('No localImagePath in tokens.json. Add "localImagePath": "assets/token-X.jpg"');
+if (!process.env.OPENAI_API_KEY) {
+  console.error('\nOPENAI_API_KEY not found in .env!');
   process.exit(1);
 }
-if (!existsSync(token.localImagePath)) {
-  console.error(`Image file not found: ${token.localImagePath}`);
-  console.error(`Save your image to: ${token.localImagePath}`);
-  process.exit(1);
-}
+
+const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+
+const imagePrompt = token.imagePrompt
+  ?? `Vibrant crypto memecoin mascot for "${token.name}" (${token.symbol}). ${token.description} Bold colors, fun 2025 meme style, no text.`;
 
 let imageArweaveUri;
 try {
-  const imageBytes = new Uint8Array(readFileSync(token.localImagePath));
-  const ext = token.localImagePath.split('.').pop().toLowerCase();
-  const contentType = ext === 'jpg' || ext === 'jpeg' ? 'image/jpeg' : 'image/png';
-  const imageFile = createGenericFile(imageBytes, `token-${tokenIndex}.${ext}`, { contentType });
+  const dalleResponse = await openai.images.generate({
+    model: 'dall-e-3',
+    prompt: imagePrompt,
+    n: 1,
+    size: '1024x1024',
+    response_format: 'b64_json',
+  });
+
+  const b64 = dalleResponse.data[0].b64_json;
+  console.log('   Image generated');
+
+  const imageBytes = new Uint8Array(Buffer.from(b64, 'base64'));
+  const imageFile = createGenericFile(imageBytes, `token-${tokenIndex}.png`, { contentType: 'image/png' });
   [imageArweaveUri] = await umi.uploader.upload([imageFile]);
   console.log(`   Image URI: ${imageArweaveUri}`);
 } catch (err) {
-  console.error('Image upload failed:', err.message);
+  console.error('Image generation/upload failed:', err.message);
   process.exit(1);
 }
 
@@ -147,7 +155,7 @@ const metadataJson = {
     { trait_type: 'Creator', value: 'OpenClaw Algo Agent' },
   ],
   properties: {
-    files: [{ uri: imageArweaveUri, type: 'image/jpeg' }],
+    files: [{ uri: imageArweaveUri, type: 'image/png' }],
     category: 'image',
   },
   extensions: {
