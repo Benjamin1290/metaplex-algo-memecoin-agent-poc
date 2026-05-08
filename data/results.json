@@ -1,19 +1,5 @@
 [
   {
-    "index": 0,
-    "name": "MoonSloth",
-    "symbol": "SLOTH",
-    "mintAddress": "DEFhf1T9bNQHZAHpK4tg3851cEgdAWuQ6TMNxvtTrQ9N",
-    "metadataUri": "https://gateway.irys.xyz/7ShWvhHeJUdVHMRmDBHH7GXnetAkrgu2VBdLdrtbfZD2",
-    "explorerUrl": "https://explorer.solana.com/address/DEFhf1T9bNQHZAHpK4tg3851cEgdAWuQ6TMNxvtTrQ9N?cluster=devnet",
-    "createTxSignature": "/k6UBsx3GCtfUeuX7HIMTgtLMyZwYGn+7HmL7CKonVZNZkaqJbAfgWQas+yEnISq/+mWdtSND3FFEF2IdCCdAA==",
-    "mintTxSignature": "EcWV1CtLtrNACtrkMiSi6bH7TMgYrpDsa6Fh29pwZnyLw13AcCADhK7UUtm1VHLU8xKf2c8ACxTUpeyQRZACugZ",
-    "initialSupply": 1000000,
-    "decimals": 6,
-    "network": "devnet",
-    "mintedAt": "2026-05-04T19:03:26.056Z"
-  },
-  {
     "index": 1,
     "name": "GigaBrain",
     "symbol": "GBRAIN",
@@ -40,5 +26,19 @@
     "decimals": 6,
     "network": "devnet",
     "mintedAt": "2026-05-04T19:05:09.316Z"
+  },
+  {
+    "index": 0,
+    "name": "MoonSloth",
+    "symbol": "SLOTH",
+    "mintAddress": "7yGzkXBoiLLhZoVVikFt7njqER3nv3H9VHn2ivTiGehJ",
+    "metadataUri": "https://gateway.irys.xyz/uVt6UcAPF_h1ZrUgMVf9Liy0L7qlaoACnoWA6BPz4oY",
+    "explorerUrl": "https://explorer.solana.com/address/7yGzkXBoiLLhZoVVikFt7njqER3nv3H9VHn2ivTiGehJ",
+    "createTxSignature": "oBoDz2bOKbf/jAb/Qpcc3yEEhUHk5xAT29QQYfqQn74O4sshbvHYOSIGGsKMr78oU/1ECRAuXXmR+PX82B5RDg==",
+    "mintTxSignature": "5jTagXexsSUYzGvdWxv8fBX8wF9eW11NR4vhw4GBhG9DDmyNrY8EaNSU53MKhVS1eQwNVujkAMyHEpmQi58TX8XP",
+    "initialSupply": 1000000,
+    "decimals": 6,
+    "network": "mainnet",
+    "mintedAt": "2026-05-08T18:24:53.104Z"
   }
 ]

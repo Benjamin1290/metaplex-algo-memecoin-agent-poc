@@ -6,8 +6,8 @@
  * What it does:
  * 1. Loads token metadata from data/tokens.json
  * 2. Generates token artwork via DALL-E (OPENAI_API_KEY in .env)
- * 3. Connects to Solana devnet
- * 4. Uploads the token image + metadata JSON to Arweave via Irys devnet
+ * 3. Connects to Solana mainnet
+ * 4. Uploads the token image + metadata JSON to Arweave via Irys
  * 5. Creates the on-chain token mint + Metaplex metadata account
  * 6. Mints 1,000,000 tokens to your wallet
  * 7. Saves the mint address + explorer link to data/results.json
@@ -39,9 +39,9 @@ import { Connection, Keypair, PublicKey } from '@solana/web3.js';
 import bs58 from 'bs58';
 import { writeFileSync, existsSync, readFileSync } from 'fs';
 
-// CONSTANTS — DEVNET ONLY
-const DEVNET_RPC = 'https://api.devnet.solana.com';
-const IRYS_DEVNET_NODE = 'https://devnet.irys.xyz';
+// CONSTANTS — MAINNET
+const MAINNET_RPC = 'https://api.mainnet-beta.solana.com';
+const IRYS_NODE = 'https://node1.irys.xyz';
 const INITIAL_SUPPLY = 1_000_000;
 const TOKEN_DECIMALS = 6;
 const IRYS_FUND_SOL = 0.02;
@@ -79,23 +79,22 @@ if (!process.env.SOLANA_PRIVATE_KEY) {
 const privateKeyBytes = bs58.decode(process.env.SOLANA_PRIVATE_KEY);
 
 // Set up Metaplex UMI
-console.log('\nSetting up Metaplex UMI on devnet...');
+console.log('\nSetting up Metaplex UMI on mainnet...');
 
-const umi = createUmi(DEVNET_RPC)
+const umi = createUmi(MAINNET_RPC)
   .use(mplTokenMetadata())
-  .use(irysUploader({ address: IRYS_DEVNET_NODE }));
+  .use(irysUploader({ address: IRYS_NODE }));
 
 const umiKeypair = umi.eddsa.createKeypairFromSecretKey(privateKeyBytes);
 const signer = createSignerFromKeypair(umi, umiKeypair);
 umi.use(signerIdentity(signer));
 
 console.log(`Wallet loaded: ${signer.publicKey}`);
-console.log(`   Explorer: https://explorer.solana.com/address/${signer.publicKey}?cluster=devnet`);
+console.log(`   Explorer: https://explorer.solana.com/address/${signer.publicKey}`);
 
 // Fund the Irys uploader
 // Irys stores metadata on Arweave (permanent decentralised storage).
-// On devnet we pay with devnet SOL (worthless test tokens).
-console.log(`\nFunding Irys uploader with ${IRYS_FUND_SOL} SOL (devnet)...`);
+console.log(`\nFunding Irys uploader with ${IRYS_FUND_SOL} SOL...`);
 
 try {
   await umi.uploader.fund(sol(IRYS_FUND_SOL));
@@ -151,7 +150,7 @@ const metadataJson = {
   image: imageArweaveUri,
   attributes: [
     { trait_type: 'Type', value: 'Memecoin' },
-    { trait_type: 'Network', value: 'Solana Devnet' },
+    { trait_type: 'Network', value: 'Solana' },
     { trait_type: 'Creator', value: 'OpenClaw Algo Agent' },
   ],
   properties: {
@@ -195,7 +194,7 @@ try {
 
   createTxSignature = Buffer.from(signature).toString('base64');
   console.log('Token created');
-  console.log(`   Tx: https://explorer.solana.com/tx/${createTxSignature}?cluster=devnet`);
+  console.log(`   Tx: https://explorer.solana.com/tx/${createTxSignature}`);
 } catch (err) {
   console.error('Token creation failed:', err.message);
   process.exit(1);
@@ -210,7 +209,7 @@ const rawSupply = INITIAL_SUPPLY * Math.pow(10, TOKEN_DECIMALS);
 
 let mintTxSignature;
 try {
-  const connection = new Connection(DEVNET_RPC, 'confirmed');
+  const connection = new Connection(MAINNET_RPC, 'confirmed');
   const web3Keypair = Keypair.fromSecretKey(privateKeyBytes);
   const mintPublicKey = new PublicKey(mint.publicKey.toString());
 
@@ -231,7 +230,7 @@ try {
   );
 
   console.log('Minted');
-  console.log(`   Tx: https://explorer.solana.com/tx/${mintTxSignature}?cluster=devnet`);
+  console.log(`   Tx: https://explorer.solana.com/tx/${mintTxSignature}`);
 } catch (err) {
   console.error('Minting failed:', err.message);
   process.exit(1);
@@ -239,7 +238,7 @@ try {
 
 // Save results
 const mintAddress = mint.publicKey.toString();
-const explorerUrl = `https://explorer.solana.com/address/${mintAddress}?cluster=devnet`;
+const explorerUrl = `https://explorer.solana.com/address/${mintAddress}`;
 
 const result = {
   index: tokenIndex,
@@ -252,7 +251,7 @@ const result = {
   mintTxSignature,
   initialSupply: INITIAL_SUPPLY,
   decimals: TOKEN_DECIMALS,
-  network: 'devnet',
+  network: 'mainnet',
   mintedAt: new Date().toISOString(),
 };
 
@@ -265,7 +264,7 @@ results.push(result);
 writeFileSync('./data/results.json', JSON.stringify(results, null, 2));
 
 console.log('\n' + '═'.repeat(60));
-console.log(`${token.name} (${token.symbol}) is LIVE on Solana devnet`);
+console.log(`${token.name} (${token.symbol}) is LIVE on Solana mainnet`);
 console.log('═'.repeat(60));
 console.log(`   Mint Address : ${mintAddress}`);
 console.log(`   Explorer     : ${explorerUrl}`);

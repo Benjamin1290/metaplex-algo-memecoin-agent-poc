@@ -1,13 +1,13 @@
 {
   "name": "metaplex-algo-memecoin-agent-poc",
   "version": "1.0.0",
-  "description": "AI agent that mints memecoins on Solana devnet via Metaplex Token Metadata + Arweave",
+  "description": "AI agent that mints memecoins on Solana mainnet via Metaplex Token Metadata + Arweave",
   "type": "module",
   "scripts": {
     "dev": "node src/agent/dev.js",
-    "setup": "node src/wallet/setup-wallet.js",
     "mint": "node src/mint/mint-token.js",
-    "mint-all": "node src/agent/mint-all.js"
+    "mint-all": "node src/agent/mint-all.js",
+    "check": "node src/wallet/check-balance.js"
   },
   "dependencies": {
     "@metaplex-foundation/mpl-token-metadata": "3.4.0",
@@ -16,8 +16,10 @@
     "@metaplex-foundation/umi-uploader-irys": "1.5.0",
     "@solana/spl-token": "0.4.14",
     "@solana/web3.js": "1.98.4",
+    "bip39": "^3.1.0",
     "bs58": "6.0.0",
     "dotenv": "16.6.1",
+    "ed25519-hd-key": "^2.0.0",
     "openai": "^6.36.0"
   },
   "engines": {
