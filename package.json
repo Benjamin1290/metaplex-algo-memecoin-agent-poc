@@ -4,9 +4,10 @@
   "description": "AI agent that mints memecoins on Solana mainnet via Metaplex Token Metadata + Arweave",
   "type": "module",
   "scripts": {
-    "dev": "node src/agent/dev.js",
+    "scan": "node src/agent/trend-scanner.js",
     "mint": "node src/mint/mint-token.js",
     "mint-all": "node src/agent/mint-all.js",
+    "auto": "node src/agent/trend-scanner.js && node src/agent/mint-all.js",
     "check": "node src/wallet/check-balance.js"
   },
   "dependencies": {
