@@ -12,9 +12,8 @@ import { mintAndSubmitAgent, mplAgentIdentity } from '@metaplex-foundation/mpl-a
 import { createUmi } from '@metaplex-foundation/umi-bundle-defaults';
 import { keypairIdentity } from '@metaplex-foundation/umi';
 import { irysUploader } from '@metaplex-foundation/umi-uploader-irys';
-import { createGenericFile } from '@metaplex-foundation/umi';
 import bs58 from 'bs58';
-import { writeFileSync, existsSync, readFileSync } from 'fs';
+import { writeFileSync } from 'fs';
 
 const MAINNET_RPC = 'https://api.mainnet-beta.solana.com';
 const IRYS_NODE = 'https://node1.irys.xyz';

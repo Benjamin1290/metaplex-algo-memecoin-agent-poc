@@ -1,52 +1,71 @@
-# Metaplex Algo Memecoin Agent PoC
+# OpenClaw Memecoin Agent
 
-An autonomous agent that creates Solana memecoins end-to-end — no human required. It uploads token images and metadata permanently to Arweave via Irys, then calls Metaplex's Token Metadata program to launch a fully-formed SPL token on Solana devnet in under 60 seconds.
+An autonomous AI agent that scans live crypto trends and launches memecoins on Solana mainnet via Metaplex — fully end-to-end, no human input required.
 
-**Why this matters:** The bottleneck for memecoin creation today is the human in the loop. A trend erupts, and by the time someone spins up a wallet, designs art, uploads metadata, and deploys — the moment has passed. This PoC removes that bottleneck entirely.
+Built as an open-source reference skill for the [Metaplex Agent Library](https://www.metaplex.com/docs/agents).
 
 ---
 
 ## What it does
 
-1. Reads token concepts from `data/tokens.json`
-2. Uploads each token image to Arweave (permanent, decentralised storage)
-3. Uploads the metadata JSON (name, symbol, description, image URI) to Arweave
-4. Calls `createFungible()` — creates the SPL mint account + Metaplex metadata account in one transaction
-5. Mints 1,000,000 tokens to your wallet
-6. Saves mint addresses and explorer links to `data/results.json`
+1. **Scans trends** — pulls trending coins from CoinGecko and hot posts from Reddit r/CryptoCurrency
+2. **Generates concepts** — feeds trends into GPT-4o to produce token name, symbol, description, and image prompt
+3. **Creates artwork** — generates a custom mascot image with DALL-E 3
+4. **Launches on-chain** — uploads image + metadata permanently to Arweave via Irys, then mints a full SPL token with Metaplex metadata on Solana mainnet
+5. **Registers as an agent** — registers the agent identity on-chain via Metaplex Agent Registry (ERC-8004)
+
+One command does all of it: `npm run auto`
 
 ---
 
 ## Quick start
 
+### 1. Clone and install
+
 ```bash
 git clone https://github.com/Benjamin1290/metaplex-algo-memecoin-agent-poc
 cd metaplex-algo-memecoin-agent-poc
 npm install
-npm run dev
 ```
 
-`npm run dev` handles everything: generates a wallet, airdrops 2 devnet SOL, and mints all 3 tokens. If the devnet faucet is rate-limited, visit https://faucet.solana.com, paste your public key, then run `npm run dev` again.
-
-**Individual commands:**
+### 2. Set up your `.env`
 
 ```bash
-npm run setup                      # wallet + airdrop only
-node src/mint/mint-token.js 0      # mint MoonSloth only
-node src/mint/mint-token.js 1      # mint GigaBrain only
-node src/mint/mint-token.js 2      # mint PumpGhost only
-npm run mint-all                   # mint all 3 tokens
+cp .env.example .env
+```
+
+Fill in your keys:
+
+```
+SOLANA_PRIVATE_KEY=your_base58_private_key
+OPENAI_API_KEY=your_openai_api_key
+```
+
+You need a funded Solana mainnet wallet (0.1+ SOL recommended). If you have a seed phrase from Phantom or another wallet, use the import script:
+
+```bash
+node src/wallet/import-wallet.js "your twelve or twenty four words here"
+```
+
+### 3. Run
+
+```bash
+npm run auto       # full run: scan trends → generate concepts → mint all tokens
 ```
 
 ---
 
-## Live devnet tokens
+## Commands
 
-| Token | Symbol | Mint Address |
-|---|---|---|
-| MoonSloth | SLOTH | `3Que5JFEUaqTMJUHCMDQsAKAjWnRLHdfeqZBxRBbBNo6` |
-| GigaBrain | GBRAIN | `EViDFFVn13WpUfAsyWah7ze77FCeoRyLU7BZM1uFPDdP` |
-| PumpGhost | GHOST | `3YbA6yGrBg9dAtxrpZPvwBhFQvxjYzP84vjX8acyvCtT` |
+| Command | What it does |
+|---|---|
+| `npm run auto` | Full autonomous run: trends → concepts → mint all |
+| `npm run scan` | Scan trends + generate token concepts into `data/tokens.json` only |
+| `npm run scan 5` | Generate 5 token concepts instead of the default 3 |
+| `npm run mint-all` | Mint everything currently in `data/tokens.json` |
+| `npm run mint 0` | Mint a single token by index |
+| `npm run register` | Register this agent on-chain via Metaplex Agent Registry |
+| `npm run check` | Check your wallet's SOL balance |
 
 ---
 
@@ -55,31 +74,78 @@ npm run mint-all                   # mint all 3 tokens
 ```
 src/
   agent/
-    dev.js           ← orchestrator: setup + mint-all in one command
-    mint-all.js      ← sequential batch minter
+    trend-scanner.js     ← fetches CoinGecko + Reddit trends, generates concepts with GPT-4o
+    mint-all.js          ← sequential batch minter for all tokens in tokens.json
+    register-agent.js    ← registers agent on-chain via Metaplex Agent Registry
+    dev.js               ← legacy orchestrator
   mint/
-    mint-token.js    ← mint a single token by index
+    mint-token.js        ← mints a single token (DALL-E image → Arweave → Solana)
   wallet/
-    setup-wallet.js  ← generate keypair + airdrop devnet SOL
+    check-balance.js     ← prints wallet address + SOL balance
+    import-wallet.js     ← derives keypair from a seed phrase and saves to .env
 data/
-  tokens.json        ← token concepts (name, symbol, description, image path)
-  results.json       ← auto-generated: mint addresses, tx sigs, explorer links
-assets/
-  token-0.jpg        ← MoonSloth
-  token-1.jpg        ← GigaBrain
-  token-2.jpg        ← PumpGhost
+  tokens.json            ← token concepts (auto-generated by trend-scanner or edit manually)
+  results.json           ← auto-generated: mint addresses, tx sigs, explorer links
+  agent-registration.json ← on-chain agent identity after running npm run register
 docs/
-  grant-proposal.md  ← Metaplex grant application
+  grant-proposal.md      ← Metaplex grant application
 ```
+
+---
+
+## Live mainnet tokens
+
+| Token | Symbol | Explorer |
+|---|---|---|
+| MoonSloth | SLOTH | [view](https://explorer.solana.com/address/7yGzkXBoiLLhZoVVikFt7njqER3nv3H9VHn2ivTiGehJ) |
+| GigaBrain | GBRAIN | [view](https://explorer.solana.com/address/E5qoMLPHHbcKpErHbw1vg7S3P25j6dWiQ2jivvKXkVSP) |
+| RocketRaccoon | RROC | [view](https://explorer.solana.com/address/GpY9ymb5mFid713Y4fVzuFRWqg5S4z74Wwz3eQX8GSDV) |
+| DogeVibes | DVIB | [view](https://explorer.solana.com/address/2AZZ2aDhK5eJnQGfuGA1uhBqvdoM8Yutom4PHosZvtoC) |
+| PixelPepe | PXPE | [view](https://explorer.solana.com/address/5NQF2eUfHqQSXNM4z2aYCiR6aHYcD88utCCzJFaJyZ92) |
+| MoonYak | YAK | [view](https://explorer.solana.com/address/4tistyU2L8HuNzaw7dkxXrwRvfi2vfvnnFQFUByL3eYk) |
+| TurboSlug | TSLG | [view](https://explorer.solana.com/address/8Qe8ByTNR3kSFuYTiX6wcRsUn8cFBBinmVdfG9az3p17) |
+| SamuraiPepe | SAMU | [view](https://explorer.solana.com/address/DFLpxT2tdykvxAocq2fNdGaePVPfiBiBpcuK5SszdPa6) |
+| VoodooApe | VOOD | [view](https://explorer.solana.com/address/EyWgYegZeUU4Q6uL9imDbh85n8663uuPC1XXpZx8mDfs) |
+| DragonsBack | DRGN | [view](https://explorer.solana.com/address/ATr1Z77xA9N7KkMUmgwQthREwrjLVhiq6PmJenQMemW3) |
+
+---
+
+## Registered agent
+
+| Field | Value |
+|---|---|
+| Asset Address | `8ELd6aKy9fXUEPjfaEJt8E8avSX9Dem1VhC1AAJK94Qw` |
+| Explorer | [view](https://explorer.solana.com/address/8ELd6aKy9fXUEPjfaEJt8E8avSX9Dem1VhC1AAJK94Qw) |
+| Metadata | [Arweave](https://gateway.irys.xyz/Z_oJ-7Z_pjcrkdfdmKLz5e94eZKJxMFHo5VaM3LY94E) |
 
 ---
 
 ## Tech stack
 
-- **Metaplex UMI** — `@metaplex-foundation/umi` + `umi-bundle-defaults`
-- **Token Metadata** — `@metaplex-foundation/mpl-token-metadata`
-- **Arweave / Irys** — `@metaplex-foundation/umi-uploader-irys`
-- **Solana** — `@solana/web3.js` + `@solana/spl-token`
-- Node.js 18+ with ESM
+| Layer | Package |
+|---|---|
+| Metaplex UMI | `@metaplex-foundation/umi` + `umi-bundle-defaults` |
+| Token Metadata | `@metaplex-foundation/mpl-token-metadata` |
+| Agent Registry | `@metaplex-foundation/mpl-agent-registry` |
+| Arweave / Irys | `@metaplex-foundation/umi-uploader-irys` |
+| Solana | `@solana/web3.js` + `@solana/spl-token` |
+| AI — Text | OpenAI GPT-4o |
+| AI — Images | OpenAI DALL-E 3 |
+| Runtime | Node.js 18+ (ESM) |
 
-*Devnet only — no real money involved.*
+---
+
+## Cost estimate per token
+
+| Step | Cost |
+|---|---|
+| DALL-E 3 image | ~$0.04 |
+| Irys / Arweave storage | ~0.02 SOL |
+| Solana transaction fees | ~0.002 SOL |
+| **Total** | **~0.022 SOL + $0.04** |
+
+---
+
+## License
+
+MIT — fork it, extend it, build on it.

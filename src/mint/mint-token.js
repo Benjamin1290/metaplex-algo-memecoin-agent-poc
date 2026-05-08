@@ -13,9 +13,8 @@
  * 7. Saves the mint address + explorer link to data/results.json
  *
  * Usage:
- *   node src/mint/mint-token.js 0  =>  mint MoonSloth
- *   node src/mint/mint-token.js 1  =>  mint GigaBrain
- *   node src/mint/mint-token.js 2  =>  mint PumpGhost
+ *   node src/mint/mint-token.js 0  =>  mint token at index 0
+ *   node src/mint/mint-token.js 1  =>  mint token at index 1
  */
 
 import 'dotenv/config';
@@ -72,7 +71,7 @@ console.log(`   Description : ${token.description.slice(0, 60)}...`);
 // Validate .env and load private key
 if (!process.env.SOLANA_PRIVATE_KEY) {
   console.error('\nSOLANA_PRIVATE_KEY not found in .env!');
-  console.error('   Run this first: node src/wallet/setup-wallet.js');
+  console.error('   Add SOLANA_PRIVATE_KEY to .env — see .env.example');
   process.exit(1);
 }
 
@@ -101,7 +100,7 @@ try {
   console.log('Irys funded');
 } catch (err) {
   console.error('Could not fund Irys uploader:', err.message);
-  console.error('   Make sure your wallet has SOL. Run: node src/wallet/setup-wallet.js');
+  console.error('   Make sure your wallet has enough SOL. Run: npm run check');
   process.exit(1);
 }
 

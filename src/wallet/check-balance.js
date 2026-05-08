@@ -1,3 +1,11 @@
+/**
+ * check-balance.js
+ *
+ * Prints the wallet address and SOL balance for the key in .env.
+ *
+ * Usage: npm run check
+ */
+
 import 'dotenv/config';
 import { Connection, Keypair, LAMPORTS_PER_SOL } from '@solana/web3.js';
 import bs58 from 'bs58';
