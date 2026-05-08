@@ -61,7 +61,7 @@ npm run auto       # full run: scan trends → generate concepts → mint all to
 |---|---|
 | `npm run auto` | Full autonomous run: trends → concepts → mint all |
 | `npm run scan` | Scan trends + generate token concepts into `data/tokens.json` only |
-| `npm run scan 5` | Generate 5 token concepts instead of the default 3 |
+| `node src/agent/trend-scanner.js 5` | Generate 5 token concepts instead of the default 3 |
 | `npm run mint-all` | Mint everything currently in `data/tokens.json` |
 | `npm run mint 0` | Mint a single token by index |
 | `npm run register` | Register this agent on-chain via Metaplex Agent Registry |
@@ -77,7 +77,6 @@ src/
     trend-scanner.js     ← fetches CoinGecko + Reddit trends, generates concepts with GPT-4o
     mint-all.js          ← sequential batch minter for all tokens in tokens.json
     register-agent.js    ← registers agent on-chain via Metaplex Agent Registry
-    dev.js               ← legacy orchestrator
   mint/
     mint-token.js        ← mints a single token (DALL-E image → Arweave → Solana)
   wallet/
