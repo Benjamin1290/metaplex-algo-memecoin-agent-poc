@@ -61,5 +61,5 @@ if (failed.length > 0) {
 }
 
 const successCount = tokens.length - failed.length;
-console.log(`\nResult: ${successCount}/${tokens.length} tokens minted successfully on devnet`);
+console.log(`\nResult: ${successCount}/${tokens.length} tokens minted successfully on mainnet`);
 console.log('═'.repeat(60) + '\n');
