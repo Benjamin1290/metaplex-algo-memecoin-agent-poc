@@ -109,6 +109,12 @@ docs/
 
 ---
 
+## Video walkthrough
+
+[Watch the full demo on Loom](https://www.loom.com/share/d78b30bc29064a278d75cad0c95f5357)
+
+---
+
 ## Registered agent
 
 | Field | Value |
